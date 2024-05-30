@@ -1,0 +1,59 @@
+{% extends "base.html.twig" %}
+{% block body %}
+{% include "home/nav.html.twig" %}
+<div class="pb-6 mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
+<div class="container mx-auto py-8">
+<h1 class="text-2xl font-semibold mb-6">Application Logs</h1>
+<div class="overflow-x-auto">
+    <table class="min-w-full bg-white border border-gray-200">
+        <thead>
+            <tr>
+                <th class="px-6 py-3 border-b-2 border-gray-300 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider">
+                    ID
+                </th>
+                <th class="px-6 py-3 border-b-2 border-gray-300 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider">
+                nom
+                </th>
+                <th class="px-6 py-3 border-b-2 border-gray-300 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider">
+                Latitude
+                </th>
+                <th class="px-6 py-3 border-b-2 border-gray-300 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider">
+                Longitude	
+                </th>
+                <th class="px-6 py-3 border-b-2 border-gray-300 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider">
+                   Status
+                </th>
+               
+            </tr>
+        </thead>
+        <tbody class="bg-white">
+         {% for fibre in fibres %}
+                <tr>
+                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{{ fibre.id }}</td>
+                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{{ fibre.nom }}</td>
+                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200"> {{ fibre.latitude }}</td>
+                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{{ fibre.longitude }}</td>
+                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{{fibre.status }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+{% endblock %}

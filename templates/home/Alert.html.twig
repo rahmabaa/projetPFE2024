@@ -1,0 +1,58 @@
+{% extends "base.html.twig" %}
+{% block body %}
+{% include "home/nav.html.twig" %}
+<div class="pb-6 mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
+<div class="container mx-auto py-8">
+<h1 class="text-2xl font-semibold mb-6">Application Logs</h1>
+<div class="overflow-x-auto">
+    <table class="min-w-full bg-white border border-gray-200">
+        <thead>
+            <tr>
+                <th class="px-6 py-3 border-b-2 border-gray-300 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider">
+                    ID
+                </th>
+                <th class="px-6 py-3 border-b-2 border-gray-300 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider">
+                   Type
+                </th>
+                <th class="px-6 py-3 border-b-2 border-gray-300 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider">
+                  Contenu
+                </th>
+                <th class="px-6 py-3 border-b-2 border-gray-300 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider">
+                   Status
+                </th>
+                <th class="px-6 py-3 border-b-2 border-gray-300 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider">
+               Date
+            </th>
+            </tr>
+        </thead>
+        <tbody class="bg-white">
+         {% for alerte in alertes %}
+                <tr>
+                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{{ alerte.id }}</td>
+                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{{ alerte.type }}</td>
+                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200"> {{ alerte.contenu }}</td>
+                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{{ alerte.status }}</td>
+                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{{alerte.date|date('Y-m-d H:i:s') }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+{% endblock %}
