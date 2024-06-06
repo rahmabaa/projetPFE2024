@@ -16,8 +16,8 @@ class Alerte
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $type = null;
+    // #[ORM\Column(length: 255)]
+    // private ?string $type = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $status = null;
@@ -31,9 +31,11 @@ class Alerte
     #[ORM\Column(length: 255)]
     private ?string $contenu = null;
 
+   
     public function __construct()
     {
         $this->boite = new ArrayCollection();
+        
     }
 
     public function getId(): ?int
@@ -41,7 +43,7 @@ class Alerte
         return $this->id;
     }
 
-    public function getType(): ?string
+   /* public function getType(): ?string
     {
         return $this->type;
     }
@@ -51,7 +53,7 @@ class Alerte
         $this->type = $type;
 
         return $this;
-    }
+    }*/
 
     public function getStatus(): ?string
     {

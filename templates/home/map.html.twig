@@ -104,16 +104,16 @@ var icon = new myIconClass ({
     iconUrl:" {{asset('images/active.png')}}"
      
 });
-{% elseif fibreBoxe.status == "Panne" %}
+{% else  %}
 var icon = new myIconClass ({
     iconUrl:" {{asset('images/panne.png')}}"
      
 });  
-{% elseif fibreBoxe.status == "Vol"%}
-var icon = new myIconClass ({
-    iconUrl:" {{asset('images/vol.png')}}"
+{# {% elseif fibreBoxe.status == "Vol"%} #}
+{# var icon = new myIconClass ({ #}
+    {# iconUrl:" {{asset('images/vol.png')}}" #}
      
-});  
+{# });   #}
 {% endif %}
 
 

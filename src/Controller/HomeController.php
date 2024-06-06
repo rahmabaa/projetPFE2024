@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 use App\Entity\Alerte;
+use App\Entity\Log;
+use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use App\Entity\BoiteFibre;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,16 +16,32 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+// use App\Controller\ValidatorInterface;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\ValidatorInterface;
 use App\Form\UserType;
 use App\Repository\AdminRepository;
+use Psr\Log\LoggerInterface;
+use App\Repository\BoiteFibreRepository;
 class HomeController extends AbstractController
 {    private $passwordHasher;
+    private $locationRepository;
+    private $serializer;
+    private $validator;
+    private $entityManager;
 
-    public function __construct( private Security $security,UserPasswordHasherInterface $passwordHasher)
+    public function __construct( 
+    
+    private Security $security,
+    UserPasswordHasherInterface $passwordHasher)
     {
         $this->passwordHasher = $passwordHasher;
        
+       
     }
+    
+
+    
     
     /////////////connexion//////////////////////////
 #[Route('/', name: 'app_login', methods:['GET','POST'])]
@@ -114,9 +133,8 @@ public function nouveaucompte(Request $request,EntityManagerInterface $manager):
             
         ]);
     }
-
-    /////////////////////////////////////////////////////   
- ////////////////// logout /////////////////
+/////////////////////////////////////////////////////   
+////////////////// logout /////////////////
  #[Route('/logout', name: 'applogout', methods: ['GET'])]
  public function logout():never
  {
@@ -125,7 +143,7 @@ public function nouveaucompte(Request $request,EntityManagerInterface $manager):
      throw new \Exception('Don\'t forget to activate logout in security.yaml');
      
  }
-///////////////////////////////////
+/////////////////////////////////////////////////////
 #[Route('/map', name: 'map')]
 public function map(EntityManagerInterface $em): Response
 {  $fibreBoxes = $em->getRepository(BoiteFibre::class)->findAll();
@@ -149,7 +167,7 @@ public function map(EntityManagerInterface $em): Response
         
     ]);
 }
-
+////////////////////////////////////////////////////
 #[Route('/Accueil/historique', name: 'historique')]
 public function historique(EntityManagerInterface $em): Response
 {
@@ -159,7 +177,7 @@ public function historique(EntityManagerInterface $em): Response
         
     ]);
 }
-
+//////////////////////////////////////////////////////
 #[Route('/Accueil/alerte', name: 'alerte')]
 public function alerte(EntityManagerInterface $em): Response
 {
@@ -170,6 +188,7 @@ public function alerte(EntityManagerInterface $em): Response
         
     ]);
 }
+///////////////////////////////////////////////
 #[Route('/fibre', name: 'fibre')]
     public function boitefibre(EntityManagerInterface $em): Response
     { $fibres = $em->getRepository(BoiteFibre::class)->findAll();
@@ -179,5 +198,60 @@ public function alerte(EntityManagerInterface $em): Response
             
         ]);
     }
+//////////////////////////////////////////////////
+
+#[Route("/trigger-panne", name:"trigger_panne")]
+    
+    public function triggerPanne(EventDispatcherInterface $eventDispatcher,EntityManagerInterface $manager): Response
+    {
+        $eventDispatcher->dispatch(new Event(), 'alert.panne');
+       // Retourner une réponse, vous pouvez inclure un message ou tout autre contenu dans la réponse si nécessaire
+         return new Response('Panne alert triggered!');
+    }
+
+///////////////////////////////////////////////////
+#[Route("/api/alert", name:"api_alert", methods:['GET','POST'])]
+public function receiveAlert(EntityManagerInterface $manager,Request $request,LoggerInterface $logger): Response
+{     $content = $request->getContent();
+      $logger->info('Requête reçue avec le contenu : ' . $content);
+    // Récupérer les données de la requête
+    $data = json_decode($request->getContent(), true);
+    if (is_array($data) && isset($data['type']) && isset($data['location'])) {
+    // Créer une nouvelle instance de l'entité Alert
+    $alert = new BoiteFibre();
+    $alert->setLatitude($data['latitude']);
+    $alert->setLongitude($data['longitude']);
+    $alert->setNom("Boite X");
+    // return new Response('Alerte enregistrée avec succès', Response::HTTP_CREATED);
+    // Enregistrer l'alerte dans la base de données
+    // $entityManager = $this->getDoctrine()->getManager();
+    $manager->persist($alert);
+    $manager->flush();
+
+    return new Response('Alerte enregistrée avec succès', Response::HTTP_CREATED);
+    }
+    else{
+        $logger->error('Données invalides ou null : ' . json_encode($data));
+        return new Response('Données invalides', Response::HTTP_BAD_REQUEST);
+    }
+
+
 }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

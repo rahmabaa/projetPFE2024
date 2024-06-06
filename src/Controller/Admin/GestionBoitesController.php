@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Admin;
 use App\Entity\Alerte;
 use App\Entity\BoiteFibre;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -9,9 +10,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
+use Symfony\UX\Chartjs\Model\Chart;
+
 
 class GestionBoitesController extends AbstractDashboardController
-{
+{ 
+    public function __construct(private ChartBuilderInterface $chartBuilder) {
+}
     #[Route('/admin', name: 'admin')]
     public function index(): Response
     {
@@ -32,7 +38,10 @@ class GestionBoitesController extends AbstractDashboardController
         // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
         //
         // return $this->render('some/path/my-dashboard.html.twig');
-        return $this->render('home/dashboard.html.twig');
+        $chart = $this->chartBuilder->createChart(Chart::TYPE_LINE);
+        return $this->render('home/dashboard.html.twig',[
+            'chart' => $chart,
+        ]);
     }
 
     public function configureDashboard(): Dashboard
@@ -42,10 +51,12 @@ class GestionBoitesController extends AbstractDashboardController
     }
 
     public function configureMenuItems(): iterable
-    {
-        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
+    {   yield MenuItem::linkToRoute('Accueil','fa fa-home','Accueil');
+        // yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkToCrud('BoiteFibre', 'fas fa-list', BoiteFibre::class);
-        yield MenuItem::linkToCrud('Alerte', 'fas fa-list', Alerte::class);
-
+        yield MenuItem::linkToCrud('User', 'fas fa-list', Admin::class);
+        
+        yield MenuItem::linkToCrud('Alerte', 'fa fa-bell', Alerte::class);
+        yield MenuItem::linkToUrl('Video', 'fa fa-video-camera','https://drive.google.com/drive/folders/1wGUWKRWSOuK77OCh99M2KPRcE30iW6ps?fbclid=IwZXh0bgNhZW0CMTAAAR35NK_BO6g7y3aJrP7LXMuDwspid5eS7Nq0MPHAvemwYD89mA50cUU4Q-Y_aem_AQhyXJWhAdIWbjOwy2q3WhdtGF36nMPiJlKrHKf55gAJUBcMKo8gDMWLyIpjnwoqV_bwSmh1Sx68WCVK07FSz8w-');
     }
 }

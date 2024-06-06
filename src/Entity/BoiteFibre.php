@@ -29,7 +29,10 @@ class BoiteFibre
 
     #[ORM\ManyToMany(targetEntity: Alerte::class, mappedBy: 'boite')]
     private Collection $nomdeboite;
-
+    public function __toString(){
+    
+        return $this->getNom();
+    }
     public function __construct()
     {
         $this->nomdeboite = new ArrayCollection();
